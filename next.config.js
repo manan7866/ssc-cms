@@ -9,8 +9,8 @@ const nextConfig = {
 
     return [
       {
-        // Apply CORS headers to API routes specifically
-        source: '/api/:path*',
+        // Apply CORS headers to other API routes, excluding the content API which handles CORS internally
+        source: '/api/((?!content/).*)', // Match all API routes except content/*
         headers: [
           {
             key: 'Access-Control-Allow-Origin',
@@ -31,28 +31,6 @@ const nextConfig = {
           {
             key: 'Vary',
             value: 'Origin',
-          },
-        ],
-      },
-      {
-        // Apply general headers to all other routes
-        source: '/((?!api/).*)', // Match all routes except /api/*
-        headers: [
-          {
-            key: 'Access-Control-Allow-Origin',
-            value: websiteUrl,
-          },
-          {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET, POST, PUT, DELETE, OPTIONS',
-          },
-          {
-            key: 'Access-Control-Allow-Headers',
-            value: 'X-Requested-With, Content-Type, Accept, Authorization',
-          },
-          {
-            key: 'Access-Control-Allow-Credentials',
-            value: 'true',
           },
         ],
       },

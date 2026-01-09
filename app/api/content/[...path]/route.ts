@@ -138,9 +138,14 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
       contentType = 'text/csv';
     }
 
-    // For the deployed version, allow requests from the frontend domain
-    const origin = process.env.NEXT_PUBLIC_WEBSITE_URL ||
-                  (process.env.VERCEL_ENV === 'production' ? 'https://ssc-web-pearl.vercel.app' : '*');
+    // Determine origin based on environment and request
+    const requestOrigin = request.headers.get('origin');
+    const envOrigin = process.env.NEXT_PUBLIC_WEBSITE_URL;
+    const isDeployed = process.env.VERCEL_ENV || process.env.NODE_ENV === 'production';
+    const defaultOrigin = isDeployed ? 'https://ssc-web-pearl.vercel.app' : 'http://localhost:3000';
+
+    // Prioritize request origin, then env var, then default
+    const origin = requestOrigin || envOrigin || defaultOrigin;
 
     // Return the file content with comprehensive CORS headers
     return new Response(fileContent, {
@@ -158,9 +163,14 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
     });
   } catch (error) {
     console.error('Error serving content:', error);
-    // For the deployed version, allow requests from the frontend domain
-    const origin = process.env.NEXT_PUBLIC_WEBSITE_URL ||
-                  (process.env.VERCEL_ENV === 'production' ? 'https://ssc-web-pearl.vercel.app' : '*');
+    // Determine origin based on environment and request
+    const requestOrigin = request.headers.get('origin');
+    const envOrigin = process.env.NEXT_PUBLIC_WEBSITE_URL;
+    const isDeployed = process.env.VERCEL_ENV || process.env.NODE_ENV === 'production';
+    const defaultOrigin = isDeployed ? 'https://ssc-web-pearl.vercel.app' : 'http://localhost:3000';
+
+    // Prioritize request origin, then env var, then default
+    const origin = requestOrigin || envOrigin || defaultOrigin;
 
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
@@ -178,12 +188,14 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
 
 // Handle OPTIONS request for CORS preflight
 export async function OPTIONS(request: NextRequest) {
-  // Determine the origin from the request or environment, with a production-specific fallback
+  // Determine origin based on environment and request
   const requestOrigin = request.headers.get('origin');
   const envOrigin = process.env.NEXT_PUBLIC_WEBSITE_URL;
-  const productionFallback = process.env.VERCEL_ENV === 'production' ? 'https://ssc-web-pearl.vercel.app' : '*';
+  const isDeployed = process.env.VERCEL_ENV || process.env.NODE_ENV === 'production';
+  const defaultOrigin = isDeployed ? 'https://ssc-web-pearl.vercel.app' : 'http://localhost:3000';
 
-  const origin = requestOrigin || envOrigin || productionFallback;
+  // Prioritize request origin, then env var, then default
+  const origin = requestOrigin || envOrigin || defaultOrigin;
 
   return new Response(null, {
     status: 200,
