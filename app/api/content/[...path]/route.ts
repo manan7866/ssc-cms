@@ -20,9 +20,27 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
 
     // Security check: Ensure the resolved path is within the allowed directory
     if (!fullPath.startsWith(path.resolve(basePath))) {
-      // For the deployed version, allow requests from the frontend domain
-      const origin = process.env.NEXT_PUBLIC_WEBSITE_URL ||
-                    (process.env.VERCEL_ENV === 'production' ? 'https://ssc-web-pearl.vercel.app' : '*');
+      // Determine origin based on environment and request
+      const requestOrigin = request.headers.get('origin');
+      const envOrigin = process.env.NEXT_PUBLIC_WEBSITE_URL;
+
+      // Since we removed credentials, we can use specific origins
+      // Check against allowed origins
+      const allowedOrigins = [
+        'https://ssc-web-pearl.vercel.app',
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'http://localhost:6020',
+        process.env.NEXT_PUBLIC_WEBSITE_URL
+      ].filter(Boolean); // Remove undefined/null values
+
+      let origin = allowedOrigins[0] || 'https://ssc-web-pearl.vercel.app'; // Default to frontend URL
+
+      if (requestOrigin && allowedOrigins.includes(requestOrigin)) {
+        origin = requestOrigin;
+      } else if (envOrigin && allowedOrigins.includes(envOrigin)) {
+        origin = envOrigin;
+      }
 
       return new Response(JSON.stringify({ error: 'Invalid path' }), {
         status: 400,
@@ -31,17 +49,34 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
           'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
-          'Access-Control-Allow-Credentials': 'true',
-          'Vary': 'Origin',
+                    'Vary': 'Origin',
         },
       });
     }
 
     // Check if file exists
     if (!fs.existsSync(fullPath)) {
-      // For the deployed version, allow requests from the frontend domain
-      const origin = process.env.NEXT_PUBLIC_WEBSITE_URL ||
-                    (process.env.VERCEL_ENV === 'production' ? 'https://ssc-web-pearl.vercel.app' : '*');
+      // Determine origin based on environment and request
+      const requestOrigin = request.headers.get('origin');
+      const envOrigin = process.env.NEXT_PUBLIC_WEBSITE_URL;
+
+      // Since we removed credentials, we can use specific origins
+      // Check against allowed origins
+      const allowedOrigins = [
+        'https://ssc-web-pearl.vercel.app',
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'http://localhost:6020',
+        process.env.NEXT_PUBLIC_WEBSITE_URL
+      ].filter(Boolean); // Remove undefined/null values
+
+      let origin = allowedOrigins[0] || 'https://ssc-web-pearl.vercel.app'; // Default to frontend URL
+
+      if (requestOrigin && allowedOrigins.includes(requestOrigin)) {
+        origin = requestOrigin;
+      } else if (envOrigin && allowedOrigins.includes(envOrigin)) {
+        origin = envOrigin;
+      }
 
       return new Response(JSON.stringify({ error: 'File not found' }), {
         status: 404,
@@ -50,8 +85,7 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
           'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
-          'Access-Control-Allow-Credentials': 'true',
-          'Vary': 'Origin',
+                    'Vary': 'Origin',
         },
       });
     }
@@ -65,9 +99,27 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
         return ALLOWED_EXTENSIONS.includes(ext) || fs.statSync(path.join(fullPath, file)).isDirectory();
       });
 
-      // For the deployed version, allow requests from the frontend domain
-      const origin = process.env.NEXT_PUBLIC_WEBSITE_URL ||
-                    (process.env.VERCEL_ENV === 'production' ? 'https://ssc-web-pearl.vercel.app' : '*');
+      // Determine origin based on environment and request
+      const requestOrigin = request.headers.get('origin');
+      const envOrigin = process.env.NEXT_PUBLIC_WEBSITE_URL;
+
+      // Since we removed credentials, we can use specific origins
+      // Check against allowed origins
+      const allowedOrigins = [
+        'https://ssc-web-pearl.vercel.app',
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'http://localhost:6020',
+        process.env.NEXT_PUBLIC_WEBSITE_URL
+      ].filter(Boolean); // Remove undefined/null values
+
+      let origin = allowedOrigins[0] || 'https://ssc-web-pearl.vercel.app'; // Default to frontend URL
+
+      if (requestOrigin && allowedOrigins.includes(requestOrigin)) {
+        origin = requestOrigin;
+      } else if (envOrigin && allowedOrigins.includes(envOrigin)) {
+        origin = envOrigin;
+      }
 
       return new Response(JSON.stringify({ files }), {
         status: 200,
@@ -76,8 +128,7 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
           'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
-          'Access-Control-Allow-Credentials': 'true',
-          'Vary': 'Origin',
+                    'Vary': 'Origin',
         },
       });
     }
@@ -85,9 +136,27 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
     // Validate file extension
     const fileExtension = path.extname(fullPath).toLowerCase();
     if (!ALLOWED_EXTENSIONS.includes(fileExtension)) {
-      // For the deployed version, allow requests from the frontend domain
-      const origin = process.env.NEXT_PUBLIC_WEBSITE_URL ||
-                    (process.env.VERCEL_ENV === 'production' ? 'https://ssc-web-pearl.vercel.app' : '*');
+      // Determine origin based on environment and request
+      const requestOrigin = request.headers.get('origin');
+      const envOrigin = process.env.NEXT_PUBLIC_WEBSITE_URL;
+
+      // Since we removed credentials, we can use specific origins
+      // Check against allowed origins
+      const allowedOrigins = [
+        'https://ssc-web-pearl.vercel.app',
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'http://localhost:6020',
+        process.env.NEXT_PUBLIC_WEBSITE_URL
+      ].filter(Boolean); // Remove undefined/null values
+
+      let origin = allowedOrigins[0] || 'https://ssc-web-pearl.vercel.app'; // Default to frontend URL
+
+      if (requestOrigin && allowedOrigins.includes(requestOrigin)) {
+        origin = requestOrigin;
+      } else if (envOrigin && allowedOrigins.includes(envOrigin)) {
+        origin = envOrigin;
+      }
 
       return new Response(JSON.stringify({ error: 'File type not allowed' }), {
         status: 403,
@@ -96,17 +165,34 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
           'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
-          'Access-Control-Allow-Credentials': 'true',
-          'Vary': 'Origin',
+                    'Vary': 'Origin',
         },
       });
     }
 
     // Check file size to prevent large file reads
     if (stats.size > MAX_FILE_SIZE) {
-      // For the deployed version, allow requests from the frontend domain
-      const origin = process.env.NEXT_PUBLIC_WEBSITE_URL ||
-                    (process.env.VERCEL_ENV === 'production' ? 'https://ssc-web-pearl.vercel.app' : '*');
+      // Determine origin based on environment and request
+      const requestOrigin = request.headers.get('origin');
+      const envOrigin = process.env.NEXT_PUBLIC_WEBSITE_URL;
+
+      // Since we removed credentials, we can use specific origins
+      // Check against allowed origins
+      const allowedOrigins = [
+        'https://ssc-web-pearl.vercel.app',
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'http://localhost:6020',
+        process.env.NEXT_PUBLIC_WEBSITE_URL
+      ].filter(Boolean); // Remove undefined/null values
+
+      let origin = allowedOrigins[0] || 'https://ssc-web-pearl.vercel.app'; // Default to frontend URL
+
+      if (requestOrigin && allowedOrigins.includes(requestOrigin)) {
+        origin = requestOrigin;
+      } else if (envOrigin && allowedOrigins.includes(envOrigin)) {
+        origin = envOrigin;
+      }
 
       return new Response(JSON.stringify({ error: 'File too large' }), {
         status: 413,
@@ -115,8 +201,7 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
           'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
-          'Access-Control-Allow-Credentials': 'true',
-          'Vary': 'Origin',
+                    'Vary': 'Origin',
         },
       });
     }
@@ -142,7 +227,7 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
     const requestOrigin = request.headers.get('origin');
     const envOrigin = process.env.NEXT_PUBLIC_WEBSITE_URL;
 
-    // Since we're using credentials, we can't use wildcard origin
+    // Since we removed credentials, we can use specific origins
     // Check against allowed origins
     const allowedOrigins = [
       'https://ssc-web-pearl.vercel.app',
@@ -179,7 +264,7 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
     const requestOrigin = request.headers.get('origin');
     const envOrigin = process.env.NEXT_PUBLIC_WEBSITE_URL;
 
-    // Since we're using credentials, we can't use wildcard origin
+    // Since we removed credentials, we can use specific origins
     // Check against allowed origins
     const allowedOrigins = [
       'https://ssc-web-pearl.vercel.app',
@@ -204,8 +289,7 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
         'Access-Control-Allow-Origin': origin,
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
-        'Access-Control-Allow-Credentials': 'true',
-        'Vary': 'Origin',
+                'Vary': 'Origin',
       },
     });
   }
@@ -217,7 +301,7 @@ export async function OPTIONS(request: NextRequest) {
   const requestOrigin = request.headers.get('origin');
   const envOrigin = process.env.NEXT_PUBLIC_WEBSITE_URL;
 
-  // Since we're using credentials, we can't use wildcard origin
+  // Since we removed credentials, we can use specific origins
   // Check against allowed origins
   const allowedOrigins = [
     'https://ssc-web-pearl.vercel.app',

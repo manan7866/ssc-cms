@@ -1,0 +1,18 @@
+{
+  "title": "Sample Academy Content",
+  "description": "This is a sample content file to test the API connection",
+  "items": [
+    {
+      "id": 1,
+      "title": "Introduction to Sufism",
+      "content": "Welcome to the study of Sufism..."
+    },
+    {
+      "id": 2,
+      "title": "History of Sufi Saints",
+      "content": "Throughout history, many great saints have walked the Sufi path..."
+    }
+  ],
+  "status": "published",
+  "createdAt": "2026-01-10T00:00:00.000Z"
+}
