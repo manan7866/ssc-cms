@@ -24,9 +24,11 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
         status: 400,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || 'http://localhost:6020',
+          'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || '*',
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization',
+          'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
+          'Access-Control-Allow-Credentials': 'true',
+          'Vary': 'Origin',
         },
       });
     }
@@ -37,9 +39,11 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
         status: 404,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || 'http://localhost:6020',
+          'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || '*',
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization',
+          'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
+          'Access-Control-Allow-Credentials': 'true',
+          'Vary': 'Origin',
         },
       });
     }
@@ -57,9 +61,11 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
         status: 200,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || 'http://localhost:6020',
+          'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || '*',
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization',
+          'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
+          'Access-Control-Allow-Credentials': 'true',
+          'Vary': 'Origin',
         },
       });
     }
@@ -71,9 +77,11 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
         status: 403,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || 'http://localhost:6020',
+          'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || '*',
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization',
+          'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
+          'Access-Control-Allow-Credentials': 'true',
+          'Vary': 'Origin',
         },
       });
     }
@@ -84,9 +92,11 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
         status: 413,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || 'http://localhost:6020',
+          'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || '*',
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization',
+          'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
+          'Access-Control-Allow-Credentials': 'true',
+          'Vary': 'Origin',
         },
       });
     }
@@ -108,15 +118,18 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
       contentType = 'text/csv';
     }
 
-    // Return the file content with proper CORS headers
+    // Return the file content with comprehensive CORS headers
     return new Response(fileContent, {
       status: 200,
       headers: {
         'Content-Type': contentType,
-        'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || 'http://localhost:6020',
+        'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || '*',
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization',
+        'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
+        'Access-Control-Allow-Credentials': 'true',
         'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
+        'Vary': 'Origin',
+        'Content-Length': Buffer.byteLength(fileContent).toString(),
       },
     });
   } catch (error) {
@@ -125,22 +138,28 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
       status: 500,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || 'http://localhost:6020',
+        'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || '*',
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization',
+        'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
+        'Access-Control-Allow-Credentials': 'true',
+        'Vary': 'Origin',
       },
     });
   }
 }
 
 // Handle OPTIONS request for CORS preflight
-export async function OPTIONS() {
+export async function OPTIONS(request: NextRequest) {
+  const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_WEBSITE_URL || '*';
+
   return new Response(null, {
     status: 200,
     headers: {
-      'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || 'http://localhost:6020',
+      'Access-Control-Allow-Origin': origin,
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization',
+      'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
+      'Access-Control-Allow-Credentials': 'true',
+      'Vary': 'Origin',
     },
   });
 }
