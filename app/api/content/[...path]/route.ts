@@ -42,14 +42,19 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
         origin = envOrigin;
       }
 
-      return new Response(JSON.stringify({ error: 'Invalid path' }), {
+      return new Response(JSON.stringify({
+        success: false,
+        status: 400,
+        message: 'Invalid path',
+        data: null
+      }), {
         status: 400,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
-                    'Vary': 'Origin',
+          'Vary': 'Origin',
         },
       });
     }
@@ -78,14 +83,19 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
         origin = envOrigin;
       }
 
-      return new Response(JSON.stringify({ error: 'File not found' }), {
+      return new Response(JSON.stringify({
+        success: false,
+        status: 404,
+        message: 'File not found',
+        data: null
+      }), {
         status: 404,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
-                    'Vary': 'Origin',
+          'Vary': 'Origin',
         },
       });
     }
@@ -121,14 +131,19 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
         origin = envOrigin;
       }
 
-      return new Response(JSON.stringify({ files }), {
+      return new Response(JSON.stringify({
+        success: true,
+        status: 200,
+        message: 'Directory listing retrieved successfully',
+        data: { files }
+      }), {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
-                    'Vary': 'Origin',
+          'Vary': 'Origin',
         },
       });
     }
@@ -158,14 +173,19 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
         origin = envOrigin;
       }
 
-      return new Response(JSON.stringify({ error: 'File type not allowed' }), {
+      return new Response(JSON.stringify({
+        success: false,
+        status: 403,
+        message: 'File type not allowed',
+        data: null
+      }), {
         status: 403,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
-                    'Vary': 'Origin',
+          'Vary': 'Origin',
         },
       });
     }
@@ -194,14 +214,19 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
         origin = envOrigin;
       }
 
-      return new Response(JSON.stringify({ error: 'File too large' }), {
+      return new Response(JSON.stringify({
+        success: false,
+        status: 413,
+        message: 'File too large',
+        data: null
+      }), {
         status: 413,
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
-                    'Vary': 'Origin',
+          'Vary': 'Origin',
         },
       });
     }
@@ -245,17 +270,50 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
       origin = envOrigin;
     }
 
-    // Return the file content with comprehensive CORS headers
-    return new Response(fileContent, {
+    // Parse the file content if it's JSON to wrap it in the expected response format
+    let responseData;
+    if (contentType === 'application/json') {
+      try {
+        const parsedData = JSON.parse(fileContent);
+        responseData = JSON.stringify({
+          success: true,
+          status: 200,
+          message: 'Success',
+          data: parsedData
+        });
+      } catch (parseError) {
+        // If JSON parsing fails, return as-is but wrapped
+        responseData = JSON.stringify({
+          success: true,
+          status: 200,
+          message: 'Success',
+          data: { content: fileContent }
+        });
+      }
+    } else {
+      // For non-JSON files, wrap the content appropriately
+      responseData = JSON.stringify({
+        success: true,
+        status: 200,
+        message: 'Success',
+        data: {
+          content: fileContent,
+          type: contentType
+        }
+      });
+    }
+
+    // Return the wrapped response with comprehensive CORS headers
+    return new Response(responseData, {
       status: 200,
       headers: {
-        'Content-Type': contentType,
+        'Content-Type': 'application/json', // Always return JSON for consistency
         'Access-Control-Allow-Origin': origin,
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
         'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
         'Vary': 'Origin',
-        'Content-Length': Buffer.byteLength(fileContent).toString(),
+        'Content-Length': Buffer.byteLength(responseData).toString(),
       },
     });
   } catch (error) {
@@ -282,14 +340,19 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
       origin = envOrigin;
     }
 
-    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+    return new Response(JSON.stringify({
+      success: false,
+      status: 500,
+      message: 'Internal server error',
+      data: null
+    }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': origin,
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
-                'Vary': 'Origin',
+        'Vary': 'Origin',
       },
     });
   }
