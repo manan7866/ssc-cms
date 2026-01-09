@@ -20,11 +20,15 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
 
     // Security check: Ensure the resolved path is within the allowed directory
     if (!fullPath.startsWith(path.resolve(basePath))) {
+      // For the deployed version, allow requests from the frontend domain
+      const origin = process.env.NEXT_PUBLIC_WEBSITE_URL ||
+                    (process.env.VERCEL_ENV === 'production' ? 'https://ssc-web-pearl.vercel.app' : '*');
+
       return new Response(JSON.stringify({ error: 'Invalid path' }), {
         status: 400,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || '*',
+          'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
           'Access-Control-Allow-Credentials': 'true',
@@ -35,11 +39,15 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
 
     // Check if file exists
     if (!fs.existsSync(fullPath)) {
+      // For the deployed version, allow requests from the frontend domain
+      const origin = process.env.NEXT_PUBLIC_WEBSITE_URL ||
+                    (process.env.VERCEL_ENV === 'production' ? 'https://ssc-web-pearl.vercel.app' : '*');
+
       return new Response(JSON.stringify({ error: 'File not found' }), {
         status: 404,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || '*',
+          'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
           'Access-Control-Allow-Credentials': 'true',
@@ -57,11 +65,15 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
         return ALLOWED_EXTENSIONS.includes(ext) || fs.statSync(path.join(fullPath, file)).isDirectory();
       });
 
+      // For the deployed version, allow requests from the frontend domain
+      const origin = process.env.NEXT_PUBLIC_WEBSITE_URL ||
+                    (process.env.VERCEL_ENV === 'production' ? 'https://ssc-web-pearl.vercel.app' : '*');
+
       return new Response(JSON.stringify({ files }), {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || '*',
+          'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
           'Access-Control-Allow-Credentials': 'true',
@@ -73,11 +85,15 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
     // Validate file extension
     const fileExtension = path.extname(fullPath).toLowerCase();
     if (!ALLOWED_EXTENSIONS.includes(fileExtension)) {
+      // For the deployed version, allow requests from the frontend domain
+      const origin = process.env.NEXT_PUBLIC_WEBSITE_URL ||
+                    (process.env.VERCEL_ENV === 'production' ? 'https://ssc-web-pearl.vercel.app' : '*');
+
       return new Response(JSON.stringify({ error: 'File type not allowed' }), {
         status: 403,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || '*',
+          'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
           'Access-Control-Allow-Credentials': 'true',
@@ -88,11 +104,15 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
 
     // Check file size to prevent large file reads
     if (stats.size > MAX_FILE_SIZE) {
+      // For the deployed version, allow requests from the frontend domain
+      const origin = process.env.NEXT_PUBLIC_WEBSITE_URL ||
+                    (process.env.VERCEL_ENV === 'production' ? 'https://ssc-web-pearl.vercel.app' : '*');
+
       return new Response(JSON.stringify({ error: 'File too large' }), {
         status: 413,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || '*',
+          'Access-Control-Allow-Origin': origin,
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
           'Access-Control-Allow-Credentials': 'true',
@@ -118,12 +138,16 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
       contentType = 'text/csv';
     }
 
+    // For the deployed version, allow requests from the frontend domain
+    const origin = process.env.NEXT_PUBLIC_WEBSITE_URL ||
+                  (process.env.VERCEL_ENV === 'production' ? 'https://ssc-web-pearl.vercel.app' : '*');
+
     // Return the file content with comprehensive CORS headers
     return new Response(fileContent, {
       status: 200,
       headers: {
         'Content-Type': contentType,
-        'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || '*',
+        'Access-Control-Allow-Origin': origin,
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
         'Access-Control-Allow-Credentials': 'true',
@@ -134,11 +158,15 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
     });
   } catch (error) {
     console.error('Error serving content:', error);
+    // For the deployed version, allow requests from the frontend domain
+    const origin = process.env.NEXT_PUBLIC_WEBSITE_URL ||
+                  (process.env.VERCEL_ENV === 'production' ? 'https://ssc-web-pearl.vercel.app' : '*');
+
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_WEBSITE_URL || '*',
+        'Access-Control-Allow-Origin': origin,
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept, Authorization, Range',
         'Access-Control-Allow-Credentials': 'true',
@@ -150,7 +178,12 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
 
 // Handle OPTIONS request for CORS preflight
 export async function OPTIONS(request: NextRequest) {
-  const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_WEBSITE_URL || '*';
+  // Determine the origin from the request or environment, with a production-specific fallback
+  const requestOrigin = request.headers.get('origin');
+  const envOrigin = process.env.NEXT_PUBLIC_WEBSITE_URL;
+  const productionFallback = process.env.VERCEL_ENV === 'production' ? 'https://ssc-web-pearl.vercel.app' : '*';
+
+  const origin = requestOrigin || envOrigin || productionFallback;
 
   return new Response(null, {
     status: 200,

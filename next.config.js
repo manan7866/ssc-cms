@@ -3,7 +3,10 @@ const nextConfig = {
   eslint: { ignoreDuringBuilds: true },
   reactStrictMode: true,
   async headers() {
+    // Use environment variable for allowed origin, with fallback to localhost for development
+    // For production deployment, this should be set in Vercel environment variables
     const websiteUrl = process.env.NEXT_PUBLIC_WEBSITE_URL || 'http://localhost:6020';
+
     return [
       {
         // Apply CORS headers to API routes specifically
