@@ -6,12 +6,38 @@ const nextConfig = {
     const websiteUrl = process.env.NEXT_PUBLIC_WEBSITE_URL || 'http://localhost:6020';
     return [
       {
-        // Apply these headers to all routes
-        source: '/(.*)',
+        // Apply CORS headers to API routes specifically
+        source: '/api/:path*',
         headers: [
           {
             key: 'Access-Control-Allow-Origin',
             value: websiteUrl, // Allow requests from the specified website URL
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, POST, PUT, DELETE, OPTIONS',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'X-Requested-With, Content-Type, Accept, Authorization, Range',
+          },
+          {
+            key: 'Access-Control-Allow-Credentials',
+            value: 'true',
+          },
+          {
+            key: 'Vary',
+            value: 'Origin',
+          },
+        ],
+      },
+      {
+        // Apply general headers to all other routes
+        source: '/((?!api/).*)', // Match all routes except /api/*
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: websiteUrl,
           },
           {
             key: 'Access-Control-Allow-Methods',
