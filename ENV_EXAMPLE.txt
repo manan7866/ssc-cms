@@ -1,0 +1,6 @@
+# Development environment
+NEXT_PUBLIC_BACKEND_URL=http://localhost:8001
+NEXT_PUBLIC_WEBSITE_URL=http://localhost:3000
+
+# Production deployment (set these in Vercel environment variables for deployed version)
+# NEXT_PUBLIC_WEBSITE_URL=https://ssc-web-pearl.vercel.app

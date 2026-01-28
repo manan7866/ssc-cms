@@ -1,0 +1,32 @@
+{
+  "title": "Academy Content Index",
+  "description": "Index of all academy content",
+  "categories": [
+    {
+      "name": "dialogseries",
+      "path": "/api/content/academy/dialogseries",
+      "description": "Dialog Series content"
+    },
+    {
+      "name": "hardtalk",
+      "path": "/api/content/academy/hardtalk",
+      "description": "Hard Talk content"
+    },
+    {
+      "name": "inspiringinterview",
+      "path": "/api/content/academy/inspiringinterview",
+      "description": "Inspiring Interviews"
+    },
+    {
+      "name": "sacredprofessions",
+      "path": "/api/content/academy/sacredprofessions",
+      "description": "Sacred Professions"
+    },
+    {
+      "name": "sample",
+      "path": "/api/content/academy/sample",
+      "description": "Sample content for testing"
+    }
+  ],
+  "lastUpdated": "2026-01-10T00:00:00.000Z"
+}
