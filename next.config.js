@@ -38,7 +38,7 @@ const nextConfig = {
     ];
   },
   async rewrites() {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001'; // Fallback URL
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://api.sufisciencecenter.info'; // Fallback URL
     return [
       {
         source: "/v1/:path*",
