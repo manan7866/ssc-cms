@@ -31,6 +31,7 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
         'http://localhost:3000',
         'http://localhost:3001',
         'http://localhost:6020',
+        'https://sufisciencecenter.info',
         process.env.NEXT_PUBLIC_WEBSITE_URL
       ].filter(Boolean); // Remove undefined/null values
 
@@ -72,10 +73,11 @@ export async function GET(request: NextRequest, { params }: { params: { path: st
         'http://localhost:3000',
         'http://localhost:3001',
         'http://localhost:6020',
+        'https://sufisciencecenter.info',
         process.env.NEXT_PUBLIC_WEBSITE_URL
       ].filter(Boolean); // Remove undefined/null values
 
-      let origin = allowedOrigins[0] || 'https://ssc-web-pearl.vercel.app'; // Default to frontend URL
+      let origin = allowedOrigins[0] || 'https://sufisciencecenter.info'; // Default to frontend URL
 
       if (requestOrigin && allowedOrigins.includes(requestOrigin)) {
         origin = requestOrigin;
