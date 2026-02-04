@@ -6,7 +6,7 @@ const nextConfig = {
   async headers() {
     // Use environment variable for allowed origin, with fallback to localhost for development
     // For production deployment, this should be set in Vercel environment variables
-    const websiteUrl = process.env.NEXT_PUBLIC_WEBSITE_URL || 'http://localhost:6020';
+    const websiteUrl = process.env.NEXT_PUBLIC_WEBSITE_URL || 'https://sufisciencecenter.info';
 
     return [
       {
