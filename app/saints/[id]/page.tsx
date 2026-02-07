@@ -8,8 +8,9 @@ import Link from "next/link";
 interface SaintForm {
   name: string;
   datesRaw: string;
-  birthYear: number | null;
-  deathYear: number | null;
+  // birthYear: number | null;
+  // deathYear: number | null;
+  region: string;
   period: string;
   century: string;
   summary: string;
@@ -30,8 +31,7 @@ export default function SaintEditorPage() {
   const [form, setForm] = useState<SaintForm>({
     name: "",
     datesRaw: "",
-    birthYear: null,
-    deathYear: null,
+    region: "",
     period: "",
     century: "",
     summary: "",
@@ -44,7 +44,7 @@ export default function SaintEditorPage() {
       ? localStorage.getItem("cms_token") || ""
       : "";
 
-  const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+  const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8001";
 
   useEffect(() => {
     if (!isNew) {
@@ -63,8 +63,7 @@ export default function SaintEditorPage() {
       setForm({
         name: saint.name || "",
         datesRaw: saint.dates_raw || "",
-        birthYear: saint.birth_year,
-        deathYear: saint.death_year,
+        region: saint.region || "",
         period: saint.period || "",
         century: saint.century || "",
         summary: saint.summary || "",
@@ -94,8 +93,7 @@ export default function SaintEditorPage() {
       const payload = {
         name: form.name,
         datesRaw: form.datesRaw || null,
-        birthYear: form.birthYear,
-        deathYear: form.deathYear,
+        region: form.region || null,
         period: form.period || null,
         century: form.century || null,
         summary: form.summary,
@@ -148,6 +146,7 @@ export default function SaintEditorPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
+      
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
@@ -192,7 +191,7 @@ export default function SaintEditorPage() {
                 placeholder="e.g., c. 1320-1392"
               />
             </div>
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Birth Year
               </label>
@@ -224,6 +223,18 @@ export default function SaintEditorPage() {
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g., 1392"
+              />
+            </div> */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Region
+              </label>
+              <input
+                type="text"
+                value={form.region}
+                onChange={(e) => setForm({ ...form, region: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="e.g., Kashmir"
               />
             </div>
           </div>
