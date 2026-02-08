@@ -27,6 +27,11 @@ COPY package.json package-lock.json ./
 
 # Copy source code
 COPY . .
+ARG NEXT_PUBLIC_BACKEND_URL
+ARG NEXT_PUBLIC_WEBSITE_URL
+
+ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
+ENV NEXT_PUBLIC_WEBSITE_URL=$NEXT_PUBLIC_WEBSITE_URL
 
 # Build the application
 RUN npm run build
